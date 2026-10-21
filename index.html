@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aku Bangga Mampu Berpuasa - Media Pembelajaran Interaktif Kelas 3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/nunito@5.0.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/amiri@5.0.0/index.css">
+<style>
+  * { font-family: 'Nunito', sans-serif; }
+  .arabic { font-family: 'Amiri', serif; direction: rtl; }
+  body {
+    background: linear-gradient(135deg, #ecfdf5 0%, #fef3c7 50%, #f0f9ff 100%);
+    min-height: 100vh;
+  }
+  .glass {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.5);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+    transition: all 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(16,185,129,0.5); }
+  .btn-secondary {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 4px 12px rgba(251,191,36,0.4);
+    transition: all 0.3s;
+  }
+  .card-hover { transition: all 0.3s; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes twinkle { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+  @keyframes pop { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes slideIn { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes confetti {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  
+  .float { animation: float 3s ease-in-out infinite; }
+  .twinkle { animation: twinkle 2s ease-in-out infinite; }
+  .pop { animation: pop 0.5s ease-out; }
+  .slide-in { animation: slideIn 0.5s ease-out; }
+  .fade-in { animation: fadeIn 0.5s ease-out; }
+  
+  .moon-bg {
+    background: radial-gradient(circle at 30% 30%, #fde68a 0%, #fbbf24 60%, #f59e0b 100%);
+    box-shadow: 0 0 40px rgba(251,191,36,0.5);
+  }
+  
+  .star {
+    position: absolute;
+    background: #fbbf24;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  
+  .drag-item {
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s;
+  }
+  .drag-item:active { cursor: grabbing; }
+  .drag-item.dragging { opacity: 0.5; transform: scale(1.05); }
+  
+  .drop-zone {
+    transition: all 0.3s;
+    min-height: 180px;
+  }
+  .drop-zone.drag-over {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    transform: scale(1.02);
+  }
+  
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confetti 3s linear forwards;
+  }
+  
+  .progress-ring {
+    transition: stroke-dashoffset 0.5s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  
+  .badge-locked { filter: grayscale(1) opacity(0.4); }
+  
+  .hotspot-btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(251,191,36,0.9);
+    border: 3px solid white;
+    cursor: pointer;
+    animation: twinkle 1.5s infinite;
+    box-shadow: 0 0 15px rgba(251,191,36,0.8);
+  }
+  
+  .nav-item {
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+  }
+  .nav-item:hover { background: #f0fdf4; border-left-color: #10b981; }
+  .nav-item.active { background: #d1fae5; border-left-color: #059669; font-weight: 700; }
+  
+  .flip-card {
+    perspective: 1000px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+  }
+  .flip-back { transform: rotateY(180deg); }
+  
+  .quiz-option {
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+  }
+  .quiz-option:hover:not(.disabled) { border-color: #10b981; transform: translateX(4px); }
+  .quiz-option.correct { background: #d1fae5; border-color: #059669; }
+  .quiz-option.wrong { background: #fee2e2; border-color: #dc2626; }
+  .quiz-option.disabled { cursor: not-allowed; }
+  
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+  
+  .section-title {
+    background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .gradient-text-gold {
+    background: linear-gradient(135deg, #f59e0b 0%, #dc2626 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .mosque-silhouette {
+    background: linear-gradient(to bottom, #065f46 0%, #047857 100%);
+    clip-path: polygon(0 100%, 0 70%, 5% 70%, 5% 50%, 10% 50%, 10% 60%, 15% 60%, 15% 40%, 18% 40%, 18% 20%, 22% 20%, 22% 40%, 25% 40%, 25% 50%, 30% 50%, 30% 65%, 35% 65%, 35% 55%, 40% 55%, 40% 45%, 43% 45%, 43% 25%, 45% 15%, 47% 5%, 50% 0%, 53% 5%, 55% 15%, 57% 25%, 57% 45%, 60% 45%, 60% 55%, 65% 55%, 65% 65%, 70% 65%, 70% 50%, 75% 50%, 75% 40%, 78% 40%, 78% 20%, 82% 20%, 82% 40%, 85% 40%, 85% 60%, 90% 60%, 90% 50%, 95% 50%, 95% 70%, 100% 70%, 100% 100%);
+  }
+</style>
+</head>
+<body class="text-gray-800">
+
+<!-- Floating Stars Background -->
+<div id="stars-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+<!-- TOP NAVBAR -->
+<nav class="sticky top-0 z-40 glass shadow-md px-4 py-3 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-2xl shadow-lg">🌙</div>
+    <div>
+      <h1 class="font-bold text-emerald-700 text-lg leading-tight">Aku Bangga Mampu Berpuasa</h1>
+      <p class="text-xs text-gray-600">PAI Kelas 3 SD • Bab IV</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <div class="hidden md:flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+      <span class="text-2xl">⭐</span>
+      <span class="font-bold text-amber-600" id="totalPoints">0</span>
+      <span class="text-xs text-gray-500">Poin</span>
+    </div>
+    <button onclick="toggleSidebar()" class="md:hidden btn-primary text-white px-3 py-2 rounded-lg">☰</button>
+  </div>
+</nav>
+
+<div class="flex relative">
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="hidden md:block w-64 glass shadow-lg min-h-[calc(100vh-72px)] p-4 sticky top-[72px] z-30">
+    <h3 class="font-bold text-emerald-700 mb-3 text-sm uppercase tracking-wide">📚 Menu Belajar</h3>
+    <nav class="space-y-1" id="navList">
+      <button onclick="goTo('home')" data-target="home" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">🏠 Beranda</button>
+      <button onclick="goTo('petunjuk')" data-target="petunjuk" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">📖 Petunjuk</button>
+      <button onclick="goTo('tujuan')" data-target="tujuan" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">🎯 Tujuan Belajar</button>
+      <button onclick="goTo('apersepsi')" data-target="apersepsi" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">✨ Apersepsi</button>
+      <button onclick="goTo('materiA')" data-target="materiA" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">📗 Ketentuan Puasa</button>
+      <button onclick="goTo('materiB')" data-target="materiB" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">📘 Hikmah Puasa</button>
+      <button onclick="goTo('aktivitas')" data-target="aktivitas" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">🎮 Aktivitas Interaktif</button>
+      <button onclick="goTo('hafalan')" data-target="hafalan" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">🤲 Hafalan Niat & Doa</button>
+      <button onclick="goTo('kuis')" data-target="kuis" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">📝 Kuis & HOTS</button>
+      <button onclick="goTo('rangkuman')" data-target="rangkuman" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">🗺️ Rangkuman</button>
+      <button onclick="goTo('refleksi')" data-target="refleksi" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">💭 Refleksi</button>
+      <button onclick="goTo('guru')" data-target="guru" class="nav-item w-full text-left px-3 py-2 rounded-lg text-sm">👩‍🏫 Panduan Guru</button>
+    </nav>
+    
+    <!-- Progress Ring -->
+    <div class="mt-6 p-4 bg-white rounded-xl shadow-sm text-center">
+      <p class="text-xs text-gray-500 mb-2">Progres Belajarmu</p>
+      <div class="relative inline-block">
+        <svg width="80" height="80">
+          <circle cx="40" cy="40" r="32" stroke="#e5e7eb" stroke-width="8" fill="none"/>
+          <circle id="progressCircle" cx="40" cy="40" r="32" stroke="#10b981" stroke-width="8" fill="none" stroke-linecap="round" class="progress-ring" stroke-dasharray="201" stroke-dashoffset="201"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center font-bold text-emerald-600" id="progressText">0%</div>
+      </div>
+    </div>
+    
+    <!-- Badges -->
+    <div class="mt-4 p-4 bg-white rounded-xl shadow-sm">
+      <p class="text-xs text-gray-500 mb-2">🏆 Lencana Kamu</p>
+      <div class="grid grid-cols-3 gap-2" id="badgeGrid">
+        <div class="text-center badge-locked" data-badge="puasa"><div class="text-2xl">🌟</div><div class="text-[10px]">Puasa Expert</div></div>
+        <div class="text-center badge-locked" data-badge="hafal"><div class="text-2xl">📿</div><div class="text-[10px]">Hafal Niat</div></div>
+        <div class="text-center badge-locked" data-badge="sabar"><div class="text-2xl">🧘</div><div class="text-[10px]">Anak Sabar</div></div>
+        <div class="text-center badge-locked" data-badge="peduli"><div class="text-2xl">🤝</div><div class="text-[10px]">Anak Peduli</div></div>
+        <div class="text-center badge-locked" data-badge="juara"><div class="text-2xl">🏆</div><div class="text-[10px]">Juara Kuis</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-4 md:p-8 max-w-6xl mx-auto relative z-10">
+    
+    <!-- HOME -->
+    <section id="home" class="section fade-in">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 p-8 md:p-12 text-white shadow-2xl">
+        <div class="absolute top-4 right-4 w-24 h-24 rounded-full moon-bg float"></div>
+        <div class="absolute top-20 right-32 text-4xl twinkle">✨</div>
+        <div class="absolute top-10 right-60 text-3xl twinkle" style="animation-delay: 0.5s">⭐</div>
+        
+        <div class="relative z-10">
+          <span class="inline-block bg-white/20 px-4 py-1 rounded-full text-sm mb-4">🎉 Selamat Datang, Anak Hebat!</span>
+          <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+            Aku Bangga <br/>
+            <span class="gradient-text-gold">Mampu Berpuasa</span>
+          </h1>
+          <p class="text-lg md:text-xl mb-6 max-w-2xl">
+            Yuk, kenali ibadah puasa Ramadan dengan cara yang seru! Kamu akan belajar tentang 
+            <b>ketentuan puasa</b> dan <b>hikmah puasa</b> sambil bermain kuis interaktif! 🌙
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="goTo('petunjuk')" class="bg-white text-emerald-700 font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition">
+              🚀 Mulai Belajar
+            </button>
+            <button onclick="goTo('guru')" class="bg-white/20 border-2 border-white font-bold px-6 py-3 rounded-xl hover:bg-white/30 transition">
+              👩‍🏫 Panduan Guru
+            </button>
+          </div>
+        </div>
+        
+        <!-- Mosque Silhouette -->
+        <div class="absolute bottom-0 left-0 right-0 h-24 mosque-silhouette opacity-40"></div>
+      </div>
+      
+      <!-- Info Cards -->
+      <div class="grid md:grid-cols-3 gap-4 mt-8">
+        <div class="glass p-6 rounded-2xl card-hover">
+          <div class="text-4xl mb-2">📚</div>
+          <h3 class="font-bold text-emerald-700">Materi Lengkap</h3>
+          <p class="text-sm text-gray-600 mt-1">Pengertian, syarat, rukun, sunnah, dan pembatal puasa.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover">
+          <div class="text-4xl mb-2">🎮</div>
+          <h3 class="font-bold text-emerald-700">5 Aktivitas Seru</h3>
+          <p class="text-sm text-gray-600 mt-1">Drag-drop, kuis, mencocokkan, flashcard, dan simulasi.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover">
+          <div class="text-4xl mb-2">🏆</div>
+          <h3 class="font-bold text-emerald-700">Kumpulkan Lencana</h3>
+          <p class="text-sm text-gray-600 mt-1">5 lencana keren menanti! Belajar sambil bermain.</p>
+        </div>
+      </div>
+      
+      <!-- Identitas Media -->
+      <div class="glass p-6 rounded-2xl mt-8">
+        <h3 class="font-bold text-emerald-700 mb-4 flex items-center gap-2">🪪 Identitas Media</h3>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div><b>Judul:</b> Aku Bangga Mampu Berpuasa - Petualangan Belajar Puasa</div>
+          <div><b>Jenjang:</b> SD Kelas 3 / Fase B</div>
+          <div><b>Bidang Studi:</b> Pendidikan Agama Islam & Budi Pekerti</div>
+          <div><b>Alokasi Waktu:</b> 3 x 35 menit (1 pertemuan)</div>
+          <div><b>Target:</b> Siswa (mandiri/terbimbing) & Guru</div>
+          <div><b>Model:</b> Contextual Teaching and Learning (CTL)</div>
+          <div><b>Platform:</b> Web HTML5 (offline/online)</div>
+          <div><b>Prasyarat:</b> Browser modern, perangkat dengan layar ≥7"</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PETUNJUK -->
+    <section id="petunjuk" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-6">📖 Petunjuk Penggunaan</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-500">
+            <div class="font-bold text-emerald-700 mb-2">🖱️ Klik Tombol</div>
+            <p class="text-sm text-gray-700">Klik tombol dan kartu untuk berinteraksi. Setiap klik membawamu lebih dekat ke pemahaman!</p>
+          </div>
+          <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-500">
+            <div class="font-bold text-amber-700 mb-2">🎯 Drag & Drop</div>
+            <p class="text-sm text-gray-700">Seret kartu ke kotak yang tepat. Tahan kartu lalu lepaskan di tempat tujuan.</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500">
+            <div class="font-bold text-blue-700 mb-2">⭐ Kumpulkan Poin</div>
+            <p class="text-sm text-gray-700">Jawab benar = +10 poin. Salah tidak apa-apa, coba lagi ya!</p>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500">
+            <div class="font-bold text-purple-700 mb-2">🏆 Raih Lencana</div>
+            <p class="text-sm text-gray-700">Selesaikan misi khusus untuk mendapatkan 5 lencana keren!</p>
+          </div>
+          <div class="bg-pink-50 p-4 rounded-xl border-l-4 border-pink-500">
+            <div class="font-bold text-pink-700 mb-2">🔊 Suara & Video</div>
+            <p class="text-sm text-gray-700">Pastikan suara perangkatmu aktif untuk pengalaman terbaik.</p>
+          </div>
+          <div class="bg-cyan-50 p-4 rounded-xl border-l-4 border-cyan-500">
+            <div class="font-bold text-cyan-700 mb-2">💡 Tombol Bantuan</div>
+            <p class="text-sm text-gray-700">Bingung? Klik tombol "💡 Bantuan" di setiap aktivitas untuk petunjuk.</p>
+          </div>
+        </div>
+        
+        <div class="mt-6 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-300">
+          <div class="flex items-start gap-3">
+            <div class="text-3xl">🎓</div>
+            <div>
+              <div class="font-bold text-yellow-800">3 Jalur Belajar (Diferensiasi)</div>
+              <p class="text-sm text-gray-700 mt-1">
+                <b>🌱 Pemula:</b> Banyak petunjuk & contoh. 
+                <b>🌿 Reguler:</b> Standar. 
+                <b>🌳 Ahli:</b> Tantangan HOTS & misi ekstra!
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('home')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Kembali</button>
+          <button onclick="goTo('tujuan')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Lanjut: Tujuan →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TUJUAN -->
+    <section id="tujuan" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">🎯 Tujuan Pembelajaran</h2>
+        <p class="text-gray-600 mb-6">Setelah belajar, kamu akan mampu...</p>
+        
+        <div class="space-y-3" id="tujuanList">
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0">1</div>
+            <div><b>Meyakini</b> bahwa puasa adalah bentuk ketaatan kepada Allah Swt. <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full ml-2">Sikap</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0">2</div>
+            <div><b>Menunjukkan</b> sikap sabar & mengendalikan diri saat berpuasa. <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full ml-2">Sikap</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">3</div>
+            <div><b>Menjelaskan</b> pengertian dan ketentuan puasa (syarat, rukun, sunnah, pembatal). <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full ml-2">Pengetahuan</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">4</div>
+            <div><b>Membuat bagan</b> ketentuan puasa dengan tepat. <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full ml-2">Keterampilan</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shrink-0">5</div>
+            <div><b>Menjelaskan & merumuskan</b> hikmah puasa bagi tubuh dan sosial. <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full ml-2">Pengetahuan</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold shrink-0">6</div>
+            <div><b>Menghafal</b> lafaz niat dan doa berbuka puasa dengan lancar. <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-2">Keterampilan</span></div>
+          </div>
+          <div class="flex gap-3 bg-white p-4 rounded-xl card-hover shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold shrink-0">7</div>
+            <div><b>Menceritakan</b> pengalaman puasa dalam keluarga. <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-2">Keterampilan</span></div>
+          </div>
+        </div>
+        
+        <div class="mt-6 grid md:grid-cols-2 gap-4">
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
+            <h4 class="font-bold text-emerald-700 mb-2">🌟 Profil Pelajar Pancasila</h4>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>✅ Beriman & Bertakwa kepada Tuhan YME</li>
+              <li>✅ Mandiri</li>
+              <li>✅ Bernalar Kritis</li>
+              <li>✅ Bergotong Royong</li>
+            </ul>
+          </div>
+          <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-4 rounded-xl">
+            <h4 class="font-bold text-amber-700 mb-2">🎯 Dimensi Profil Lulusan (DPL)</h4>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>✅ Keimanan & Ketakwaan</li>
+              <li>✅ Penalaran Kritis</li>
+              <li>✅ Kemandirian</li>
+              <li>✅ Kesehatan & Komunikasi</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('petunjuk')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Petunjuk</button>
+          <button onclick="goTo('apersepsi')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Apersepsi →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- APERSEPSI -->
+    <section id="apersepsi" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-6">✨ Cerita Pembuka: Jelang Ramadan Tiba</h2>
+        
+        <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-6 rounded-2xl mb-6 border-2 border-amber-200">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-5xl float">🏡</div>
+            <h3 class="text-2xl font-bold text-amber-800">Keluarga Sakinah Menyambut Ramadan</h3>
+          </div>
+          <div class="space-y-3 text-gray-700 leading-relaxed">
+            <p>Ayah dan ibu terlihat sangat sibuk di akhir bulan <b>Sya'ban</b>. Mereka membersihkan seluruh bagian rumah dengan gembira. Aku dan adik turut membantu semampunya. 🧹</p>
+            <p>Ayah dan ibu menunjukkan rasa <b>bahagia</b> karena Ramadan akan tiba. Setelah rumah bersih dan rapi, kami <b>saling bermaafan</b>. Mereka mengajarkan kami <b>bersih hati</b> sebelum berpuasa.</p>
+            <p class="bg-white p-3 rounded-xl italic border-l-4 border-emerald-400">
+              "Bahagia rasanya menyambut Ramadan. Rumah bersih, hati pun bersih. Semoga Ramadan tahun ini aku mampu berpuasa sebulan penuh." 🤲
+            </p>
+          </div>
+        </div>
+        
+        <h3 class="font-bold text-xl text-emerald-700 mb-4">💭 Pertanyaan Pemantik</h3>
+        <div class="grid md:grid-cols-2 gap-3 mb-6">
+          <div class="bg-white p-4 rounded-xl card-hover shadow-sm cursor-pointer" onclick="this.classList.toggle('bg-emerald-50')">
+            <div class="font-bold text-emerald-700 mb-1">🤔 Pertanyaan 1</div>
+            <p class="text-sm text-gray-700">Apa yang kamu rasakan saat bulan Ramadan tiba?</p>
+            <button class="mt-2 text-xs text-emerald-600 font-bold" onclick="event.stopPropagation(); revealAnswer(this, 'Aku merasa gembira, semangat, dan ingin berbuat baik!')">Klik untuk contoh jawaban</button>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-hover shadow-sm cursor-pointer" onclick="this.classList.toggle('bg-emerald-50')">
+            <div class="font-bold text-emerald-700 mb-1">🤔 Pertanyaan 2</div>
+            <p class="text-sm text-gray-700">Apa yang ayah & ibu persiapkan saat Ramadan?</p>
+            <button class="mt-2 text-xs text-emerald-600 font-bold" onclick="event.stopPropagation(); revealAnswer(this, 'Membersihkan rumah, membeli kurma, menyiapkan menu sahur & buka, saling memaafkan.')">Klik untuk contoh jawaban</button>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-hover shadow-sm cursor-pointer" onclick="this.classList.toggle('bg-emerald-50')">
+            <div class="font-bold text-emerald-700 mb-1">🤔 Pertanyaan 3</div>
+            <p class="text-sm text-gray-700">Berapa hari kamu berpuasa tahun lalu? Mengapa?</p>
+            <button class="mt-2 text-xs text-emerald-600 font-bold" onclick="event.stopPropagation(); revealAnswer(this, 'Ceritakan pengalamanmu sendiri dengan jujur ya! Tidak apa-apa kalau belum full, yang penting terus berusaha!')">Klik untuk contoh jawaban</button>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-hover shadow-sm cursor-pointer" onclick="this.classList.toggle('bg-emerald-50')">
+            <div class="font-bold text-emerald-700 mb-1">🤔 Pertanyaan 4</div>
+            <p class="text-sm text-gray-700">Mengapa kita harus minta maaf sebelum Ramadan?</p>
+            <button class="mt-2 text-xs text-emerald-600 font-bold" onclick="event.stopPropagation(); revealAnswer(this, 'Agar hati bersih, dosa terhapus, dan ibadah puasa kita diterima Allah Swt. dengan sempurna.')">Klik untuk contoh jawaban</button>
+          </div>
+        </div>
+        
+        <div class="bg-emerald-100 p-4 rounded-xl border-l-4 border-emerald-500">
+          <p class="text-sm text-emerald-900"><b>💡 Tahukah kamu?</b> Nabi Muhammad ﷺ bersabda: "Barang siapa berpuasa Ramadan karena iman dan mengharap pahala, diampuni dosa-dosanya yang telah lalu." (HR. Bukhari & Muslim)</p>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('tujuan')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Tujuan</button>
+          <button onclick="goTo('materiA')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Mulai Materi →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATERI A: KETENTUAN PUASA -->
+    <section id="materiA" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">📗 Ketentuan Puasa</h2>
+        <p class="text-gray-600 mb-6">Yuk pelajari apa itu puasa, syarat, rukun, sunnah, dan pembatalnya!</p>
+        
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6" id="materiTabs">
+          <button onclick="showTab('pengertian')" data-tab="pengertian" class="tab-btn bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold text-sm">1. Pengertian</button>
+          <button onclick="showTab('syarat')" data-tab="syarat" class="tab-btn bg-white text-gray-700 px-4 py-2 rounded-xl font-bold text-sm">2. Syarat</button>
+          <button onclick="showTab('rukun')" data-tab="rukun" class="tab-btn bg-white text-gray-700 px-4 py-2 rounded-xl font-bold text-sm">3. Rukun</button>
+          <button onclick="showTab('sunnah')" data-tab="sunnah" class="tab-btn bg-white text-gray-700 px-4 py-2 rounded-xl font-bold text-sm">4. Sunnah</button>
+          <button onclick="showTab('batal')" data-tab="batal" class="tab-btn bg-white text-gray-700 px-4 py-2 rounded-xl font-bold text-sm">5. Pembatal</button>
+          <button onclick="showTab('simulasi')" data-tab="simulasi" class="tab-btn bg-white text-gray-700 px-4 py-2 rounded-xl font-bold text-sm">6. Simulasi</button>
+        </div>
+        
+        <!-- Tab: Pengertian -->
+        <div id="tab-pengertian" class="tab-content">
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl">
+            <h3 class="text-2xl font-bold text-emerald-700 mb-3">🕌 Pengertian Puasa</h3>
+            <div class="space-y-3">
+              <div class="bg-white p-4 rounded-xl">
+                <div class="font-bold text-amber-600">📖 Menurut Bahasa</div>
+                <p>Puasa artinya <b class="text-emerald-700 text-lg">menahan</b> (al-imsak).</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl">
+                <div class="font-bold text-amber-600">📖 Menurut Istilah</div>
+                <p>Menahan diri dari hal-hal yang membatalkan puasa mulai <b class="text-emerald-700">terbit fajar</b> hingga <b class="text-rose-600">terbenam matahari</b>.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl">
+                <div class="font-bold text-amber-600">🏷️ Jenis Puasa</div>
+                <div class="grid md:grid-cols-2 gap-2 mt-2">
+                  <div class="bg-emerald-100 p-3 rounded-lg"><b>Puasa Wajib:</b> Ramadan, Nazar, Kafarat</div>
+                  <div class="bg-blue-100 p-3 rounded-lg"><b>Puasa Sunnah:</b> Senin-Kamis, Ayyamul Bidh</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 bg-amber-50 border-2 border-amber-300 p-4 rounded-xl">
+              <div class="font-bold text-amber-800 mb-2">📜 Dalil: QS. Al-Baqarah: 183</div>
+              <p class="arabic text-2xl text-right mb-2 leading-loose">يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ كُتِبَ عَلَيۡكُمُ ٱلصِّيَامُ كَمَا كُتِبَ عَلَى ٱلَّذِينَ مِن قَبۡلِكُمۡ لَعَلَّكُمۡ تَتَّقُونَ</p>
+              <p class="text-sm italic text-gray-700">"Wahai orang-orang yang beriman! Diwajibkan atas kamu berpuasa sebagaimana diwajibkan atas orang sebelum kamu agar kamu bertakwa."</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab: Syarat -->
+        <div id="tab-syarat" class="tab-content hidden">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-2xl text-white">
+              <h3 class="text-xl font-bold mb-4">✅ Syarat Wajib Puasa</h3>
+              <p class="text-sm mb-3 opacity-90">(Orang yang WAJIB berpuasa)</p>
+              <ol class="space-y-2">
+                <li class="bg-white/20 p-3 rounded-lg"><b>1. Islam</b> - Beragama Islam</li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>2. Baligh</b> - Sudah dewasa</li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>3. Berakal</b> - Sehat pikiran</li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>4. Mampu</b> - Kuat berpuasa</li>
+              </ol>
+            </div>
+            <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-6 rounded-2xl text-white">
+              <h3 class="text-xl font-bold mb-4">🌟 Syarat Sah Puasa</h3>
+              <p class="text-sm mb-3 opacity-90">(Agar puasa SAH/diterima)</p>
+              <ol class="space-y-2">
+                <li class="bg-white/20 p-3 rounded-lg"><b>1. Islam</b></li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>2. Tamyiz</b> - Bisa bedakan baik & buruk</li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>3. Suci dari haid & nifas</b> (perempuan)</li>
+                <li class="bg-white/20 p-3 rounded-lg"><b>4. Waktu dibolehkan</b> - Bukan hari Idul Fitri, Idul Adha, Tasyriq</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl">
+            <b>⚠️ Miskonsepsi Umum:</b> Banyak yang mengira anak kecil tidak boleh puasa. Faktanya, anak kecil BOLEH & DIANJURKAN latihan puasa agar terbiasa!
+          </div>
+        </div>
+        
+        <!-- Tab: Rukun -->
+        <div id="tab-rukun" class="tab-content hidden">
+          <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-2xl">
+            <h3 class="text-2xl font-bold text-rose-700 mb-4">📌 Rukun Puasa (2 hal)</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-white p-5 rounded-2xl shadow-md">
+                <div class="text-4xl mb-2">1️⃣</div>
+                <h4 class="font-bold text-lg text-rose-700 mb-2">Niat</h4>
+                <p class="text-sm text-gray-700 mb-2">Wajib dilakukan pada <b>malam hari sebelum fajar</b>. Niat di dalam hati, sunnah dilafazkan.</p>
+                <div class="bg-rose-50 p-3 rounded-lg text-xs text-gray-600">🔑 Niat = kemauan sungguh untuk berpuasa</div>
+              </div>
+              <div class="bg-white p-5 rounded-2xl shadow-md">
+                <div class="text-4xl mb-2">2️⃣</div>
+                <h4 class="font-bold text-lg text-rose-700 mb-2">Menahan Diri</h4>
+                <p class="text-sm text-gray-700 mb-2">Menahan diri dari hal yang membatalkan puasa dari <b>terbit fajar sampai terbenam matahari</b>.</p>
+                <div class="bg-rose-50 p-3 rounded-lg text-xs text-gray-600">🚫 Makan, minum, muntah sengaja, dosa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab: Sunnah -->
+        <div id="tab-sunnah" class="tab-content hidden">
+          <div class="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-2xl">
+            <h3 class="text-2xl font-bold text-purple-700 mb-4">🌙 Sunnah-sunnah Puasa</h3>
+            <p class="text-gray-600 mb-4">Klik setiap kartu untuk lihat penjelasan!</p>
+            <div class="grid md:grid-cols-2 gap-3" id="sunnahCards">
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">🍽️</div><div class="font-bold">Menyegerakan Berbuka</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Berbuka saat azan Maghrib berkumandang. Jangan ditunda-tunda!</div>
+                </div>
+              </div>
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">🌃</div><div class="font-bold">Sahur & Mengakhirkannya</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Makan sahur sebelum fajar, diutamakan mendekati waktu Subuh. Ada berkah di dalamnya!</div>
+                </div>
+              </div>
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">🫒</div><div class="font-bold">Berbuka dengan Kurma</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Rasulullah ﷺ berbuka dengan kurma ruthab atau tamr, atau air putih jika tidak ada.</div>
+                </div>
+              </div>
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">🤲</div><div class="font-bold">Berdoa saat Berbuka</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Doa orang berpuasa saat berbuka termasuk doa yang mustajab (tidak tertolak).</div>
+                </div>
+              </div>
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">💰</div><div class="font-bold">Memperbanyak Sedekah</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Rasulullah ﷺ adalah orang paling dermawan, apalagi di bulan Ramadan.</div>
+                </div>
+              </div>
+              <div onclick="flipCard(this)" class="flip-card h-32">
+                <div class="flip-inner">
+                  <div class="flip-front bg-white shadow-md flex items-center justify-center p-4 text-center">
+                    <div><div class="text-3xl mb-1">📖</div><div class="font-bold">Tadarus Al-Qur'an</div></div>
+                  </div>
+                  <div class="flip-back bg-purple-500 text-white flex items-center justify-center p-4 text-sm">Ramadan adalah bulan diturunkannya Al-Qur'an. Perbanyak membaca & mentadabburi.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab: Batal -->
+        <div id="tab-batal" class="tab-content hidden">
+          <div class="bg-gradient-to-br from-red-50 to-rose-50 p-6 rounded-2xl">
+            <h3 class="text-2xl font-bold text-red-700 mb-4">⚠️ Hal yang Membatalkan Puasa</h3>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 card-hover">
+                <div class="font-bold text-red-700">🍔 Makan & Minum Sengaja</div>
+                <p class="text-sm text-gray-600">Jika tidak sengaja/lupa, puasa TIDAK batal.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 card-hover">
+                <div class="font-bold text-red-700">🤮 Muntah dengan Sengaja</div>
+                <p class="text-sm text-gray-600">Jika muntah tiba-tiba tanpa sengaja, tidak batal.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 card-hover">
+                <div class="font-bold text-red-700">🩸 Haid & Nifas</div>
+                <p class="text-sm text-gray-600">Khusus perempuan, wajib mengganti puasa.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 card-hover">
+                <div class="font-bold text-red-700">🤯 Gila / Hilang Akal</div>
+                <p class="text-sm text-gray-600">Puasa tidak sah jika hilang kesadaran.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 card-hover md:col-span-2">
+                <div class="font-bold text-red-700">🚪 Murtad (Keluar dari Islam)</div>
+                <p class="text-sm text-gray-600">Semua ibadah tidak sah tanpa iman.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab: Simulasi Waktu Puasa -->
+        <div id="tab-simulasi" class="tab-content hidden">
+          <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-6 rounded-2xl">
+            <h3 class="text-2xl font-bold text-blue-700 mb-4">⏰ Simulasi Waktu Puasa</h3>
+            <p class="text-gray-600 mb-4">Geser slider untuk melihat waktu dari Subuh hingga Maghrib!</p>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-md">
+              <div class="text-center mb-4">
+                <div class="text-5xl mb-2" id="timeEmoji">🌙</div>
+                <div class="text-3xl font-bold text-blue-700" id="timeDisplay">04:30</div>
+                <div class="text-sm text-gray-600" id="timeStatus">Waktu Sahur</div>
+              </div>
+              
+              <input type="range" id="timeSlider" min="270" max="1140" value="270" step="15" class="w-full h-3 rounded-lg appearance-none cursor-pointer" style="accent-color:#10b981"/>
+              
+              <div class="flex justify-between text-xs text-gray-500 mt-2">
+                <span>🌙 04:30 Subuh</span>
+                <span>☀️ 12:00 Zuhur</span>
+                <span>🌇 18:00 Maghrib</span>
+              </div>
+              
+              <div id="timeGuide" class="mt-4 p-4 bg-amber-50 rounded-xl text-sm"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('apersepsi')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Apersepsi</button>
+          <button onclick="goTo('materiB')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Hikmah Puasa →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATERI B: HIKMAH PUASA -->
+    <section id="materiB" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">📘 Hikmah Puasa</h2>
+        <p class="text-gray-600 mb-6">Klik lingkaran kuning pada gambar untuk menemukan hikmah puasa!</p>
+        
+        <div class="relative bg-gradient-to-b from-emerald-200 via-amber-100 to-rose-200 rounded-2xl overflow-hidden" style="height:400px">
+          <!-- Mosque scene with SVG -->
+          <svg viewBox="0 0 800 400" class="w-full h-full">
+            <!-- Sky gradient -->
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fef3c7"/>
+                <stop offset="100%" stop-color="#fed7aa"/>
+              </linearGradient>
+              <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#86efac"/>
+                <stop offset="100%" stop-color="#4ade80"/>
+              </linearGradient>
+            </defs>
+            <rect width="800" height="400" fill="url(#sky)"/>
+            <circle cx="700" cy="80" r="40" fill="#fbbf24" opacity="0.8"/>
+            <rect y="320" width="800" height="80" fill="url(#ground)"/>
+            
+            <!-- Mosque -->
+            <rect x="320" y="180" width="160" height="140" fill="#065f46"/>
+            <polygon points="320,180 400,120 480,180" fill="#047857"/>
+            <circle cx="400" cy="120" r="8" fill="#fbbf24"/>
+            <rect x="300" y="220" width="30" height="100" fill="#064e3b"/>
+            <rect x="470" y="220" width="30" height="100" fill="#064e3b"/>
+            <polygon points="300,220 315,190 330,220" fill="#065f46"/>
+            <polygon points="470,220 485,190 500,220" fill="#065f46"/>
+            <rect x="380" y="240" width="40" height="80" fill="#fbbf24"/>
+            
+            <!-- Person shapes -->
+            <circle cx="150" cy="280" r="20" fill="#fcd34d"/>
+            <rect x="135" y="295" width="30" height="40" fill="#10b981"/>
+            <circle cx="600" cy="280" r="20" fill="#fca5a5"/>
+            <rect x="585" y="295" width="30" height="40" fill="#3b82f6"/>
+            <circle cx="250" cy="300" r="15" fill="#fbbf24"/>
+            <rect x="240" y="310" width="20" height="30" fill="#ec4899"/>
+          </svg>
+          
+          <!-- Hotspots -->
+          <button class="hotspot-btn" style="top:25%; left:20%" onclick="showHotspot('h1')">+</button>
+          <button class="hotspot-btn" style="top:25%; left:75%" onclick="showHotspot('h2')">+</button>
+          <button class="hotspot-btn" style="top:60%; left:50%" onclick="showHotspot('h3')">+</button>
+          <button class="hotspot-btn" style="top:65%; left:15%" onclick="showHotspot('h4')">+</button>
+          <button class="hotspot-btn" style="top:65%; left:85%" onclick="showHotspot('h5')">+</button>
+        </div>
+        
+        <div id="hotspotInfo" class="mt-4 p-4 bg-emerald-50 rounded-xl min-h-[80px]">
+          <p class="text-gray-500 text-center">👆 Klik lingkaran kuning di atas untuk melihat hikmah puasa!</p>
+        </div>
+        
+        <!-- Two Categories -->
+        <div class="grid md:grid-cols-2 gap-4 mt-6">
+          <div class="bg-gradient-to-br from-rose-500 to-pink-600 p-6 rounded-2xl text-white">
+            <h3 class="text-xl font-bold mb-3">💪 Hikmah Bagi Tubuh</h3>
+            <ul class="space-y-2 text-sm">
+              <li>✅ Alat pencernaan <b>beristirahat</b></li>
+              <li>✅ Membersihkan badan dari sisa makanan</li>
+              <li>✅ Baik untuk penderita obesitas</li>
+              <li>✅ Menyehatkan jantung & otak</li>
+              <li>✅ Meningkatkan sistem imun</li>
+            </ul>
+          </div>
+          <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-2xl text-white">
+            <h3 class="text-xl font-bold mb-3">🤝 Hikmah Sosial</h3>
+            <ul class="space-y-2 text-sm">
+              <li>✅ Melatih <b>kesabaran</b></li>
+              <li>✅ Peduli pada sesama (sedekah)</li>
+              <li>✅ Berperilaku amanah & jujur</li>
+              <li>✅ Menyayangi sesama</li>
+              <li>✅ <b>Pengendalian diri</b> (menahan emosi)</li>
+              <li>✅ Bersyukur atas nikmat Allah</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mt-6 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-xl">
+          <b>🌟 Kisah Teladan:</b> Rasulullah ﷺ pernah bermimpi melihat orang-orang yang digantung pada urat besar di atas tumit mereka, mulutnya robek mengeluarkan darah. Mereka adalah orang-orang yang membatalkan puasa sebelum waktunya!
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('materiA')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Ketentuan</button>
+          <button onclick="goTo('aktivitas')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Aktivitas Interaktif →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AKTIVITAS INTERAKTIF -->
+    <section id="aktivitas" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">🎮 Aktivitas Interaktif</h2>
+        <p class="text-gray-600 mb-6">Pilih aktivitas untuk menguji pemahamanmu!</p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <button onclick="showActivity('drag')" class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">🎯</div>
+            <h3 class="font-bold text-lg">Drag & Drop</h3>
+            <p class="text-sm opacity-90">Cocokkan syarat wajib vs syarat sah puasa</p>
+          </button>
+          <button onclick="showActivity('match')" class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">🔗</div>
+            <h3 class="font-bold text-lg">Mencocokkan</h3>
+            <p class="text-sm opacity-90">Pasangkan istilah dengan artinya</p>
+          </button>
+          <button onclick="showActivity('urut')" class="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">📋</div>
+            <h3 class="font-bold text-lg">Susun Urutan</h3>
+            <p class="text-sm opacity-90">Urutkan kegiatan Ramadan yang benar</p>
+          </button>
+          <button onclick="showActivity('benar')" class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">✅</div>
+            <h3 class="font-bold text-lg">Benar atau Salah?</h3>
+            <p class="text-sm opacity-90">Tentukan pernyataan tentang puasa</p>
+          </button>
+          <button onclick="showActivity('skenario')" class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">🎭</div>
+            <h3 class="font-bold text-lg">Skenario Kasus</h3>
+            <p class="text-sm opacity-90">Selesaikan masalah kontekstual</p>
+          </button>
+          <button onclick="showActivity('bagan')" class="bg-gradient-to-br from-indigo-500 to-violet-600 text-white p-6 rounded-2xl card-hover text-left">
+            <div class="text-4xl mb-2">🗂️</div>
+            <h3 class="font-bold text-lg">Susun Bagan</h3>
+            <p class="text-sm opacity-90">Lengkapi bagan ketentuan puasa</p>
+          </button>
+        </div>
+        
+        <!-- Activity Container -->
+        <div id="activityContainer"></div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('materiB')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Hikmah</button>
+          <button onclick="goTo('hafalan')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Hafalan Niat & Doa →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HAFALAN NIAT & DOA -->
+    <section id="hafalan" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">🤲 Hafalan Niat & Doa Berbuka</h2>
+        <p class="text-gray-600 mb-6">Klik kartu untuk membalik dan hafalkan!</p>
+        
+        <!-- Niat Puasa -->
+        <div class="bg-gradient-to-br from-emerald-100 to-teal-100 p-6 rounded-2xl mb-6">
+          <h3 class="text-xl font-bold text-emerald-700 mb-4">🌙 Lafaz Niat Puasa Ramadan</h3>
+          <div class="flip-card h-64" onclick="flipCard(this)">
+            <div class="flip-inner">
+              <div class="flip-front bg-white shadow-xl flex items-center justify-center p-6">
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 mb-2">Klik untuk lihat lafaz Arab</div>
+                  <p class="text-lg italic text-gray-700">"Nawaitu shouma ghadin 'an adaa'i fardhi syahri Ramadhaana haadzihis sanati lillaahi ta'aalaa"</p>
+                  <div class="text-xs text-emerald-600 mt-3">👆 Klik untuk lihat Arabnya</div>
+                </div>
+              </div>
+              <div class="flip-back bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center p-6">
+                <div class="text-center">
+                  <p class="arabic text-3xl leading-loose mb-3">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هٰذِهِ السَّنَةِ لِلّٰهِ تَعَالٰى</p>
+                  <p class="text-sm italic">"Saya niat berpuasa esok hari untuk menunaikan fardhu di bulan Ramadan tahun ini, karena Allah Ta'āla."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex gap-2">
+            <button onclick="unlockBadge('hafal'); addPoints(20)" class="btn-primary text-white font-bold px-4 py-2 rounded-xl text-sm">✅ Saya Sudah Hafal! (+20 poin)</button>
+          </div>
+        </div>
+        
+        <!-- Doa Buka Puasa -->
+        <div class="bg-gradient-to-br from-amber-100 to-orange-100 p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-amber-700 mb-4">🌇 Doa Berbuka Puasa</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flip-card h-72" onclick="flipCard(this)">
+              <div class="flip-inner">
+                <div class="flip-front bg-white shadow-xl flex items-center justify-center p-4">
+                  <div class="text-center">
+                    <div class="text-sm text-gray-500 mb-2">Doa Versi 1</div>
+                    <p class="text-sm italic text-gray-700">"Allahumma laka shumtu wa bika aamantu wa 'alaa rizqika afthartu..."</p>
+                    <div class="text-xs text-amber-600 mt-3">👆 Klik</div>
+                  </div>
+                </div>
+                <div class="flip-back bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center p-4">
+                  <div class="text-center">
+                    <p class="arabic text-xl leading-loose mb-2">اَللّٰهُمَّ لَكَ صُمْتُ وَبِكَ اٰمَنْتُ وَعَلٰى رِزْقِكَ أَفْطَرْتُ بِرَحْمَتِكَ يَآ أَرْحَمَ الرَّاحِمِيْنَ</p>
+                    <p class="text-xs italic">"Ya Allah, untuk-Mu aku berpuasa, dengan-Mu aku beriman, atas rezeki-Mu aku berbuka..."</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flip-card h-72" onclick="flipCard(this)">
+              <div class="flip-inner">
+                <div class="flip-front bg-white shadow-xl flex items-center justify-center p-4">
+                  <div class="text-center">
+                    <div class="text-sm text-gray-500 mb-2">Doa Versi 2</div>
+                    <p class="text-sm italic text-gray-700">"Dzahabazh zhoma'u wabtallatil 'uruuqu..."</p>
+                    <div class="text-xs text-amber-600 mt-3">👆 Klik</div>
+                  </div>
+                </div>
+                <div class="flip-back bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center p-4">
+                  <div class="text-center">
+                    <p class="arabic text-xl leading-loose mb-2">ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوْقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللّٰهُ</p>
+                    <p class="text-xs italic">"Telah hilang rasa haus, telah basah urat-urat, dan telah pasti ganjaran, dengan kehendak Allah Swt."</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 bg-purple-50 p-4 rounded-xl border-2 border-purple-300">
+          <b>💡 Tips Menghafal:</b>
+          <ul class="text-sm mt-2 space-y-1 text-gray-700">
+            <li>• Baca perlahan 3x sambil meresapi artinya</li>
+            <li>• Ucapkan setiap hari sebelum sahur dan berbuka</li>
+            <li>• Minta orang tua menyimak hafalanmu</li>
+          </ul>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('aktivitas')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Aktivitas</button>
+          <button onclick="goTo('kuis')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Kuis & HOTS →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- KUIS & HOTS -->
+    <section id="kuis" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">📝 Kuis & Soal HOTS</h2>
+        <p class="text-gray-600 mb-4">Jawab 8 soal (PG, Benar/Salah, Isian, dan HOTS). Minimal 75% untuk tuntas!</p>
+        
+        <div class="flex items-center gap-4 mb-6 bg-white p-3 rounded-xl shadow-sm">
+          <div class="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div id="quizProgress" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full transition-all" style="width:0%"></div>
+          </div>
+          <span class="font-bold text-emerald-700" id="quizCounter">0/8</span>
+          <span class="text-sm bg-amber-100 px-3 py-1 rounded-full font-bold text-amber-700">⭐ <span id="quizScore">0</span></span>
+        </div>
+        
+        <div id="quizContainer"></div>
+        
+        <div id="quizResult" class="hidden"></div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('hafalan')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Hafalan</button>
+          <button onclick="goTo('rangkuman')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Rangkuman →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RANGKUMAN -->
+    <section id="rangkuman" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">🗺️ Rangkuman Mind Map</h2>
+        <p class="text-gray-600 mb-6">Peta konsep ketentuan & hikmah puasa</p>
+        
+        <div class="bg-gradient-to-br from-emerald-50 via-amber-50 to-rose-50 p-6 rounded-2xl overflow-x-auto">
+          <div class="min-w-[700px]">
+            <!-- Center node -->
+            <div class="flex justify-center mb-4">
+              <div class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white px-6 py-3 rounded-full font-bold text-lg shadow-xl">🌙 PUASA RAMADAN</div>
+            </div>
+            
+            <!-- Two main branches -->
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Branch 1: Ketentuan -->
+              <div>
+                <div class="flex justify-center mb-2"><div class="w-0.5 h-6 bg-emerald-400"></div></div>
+                <div class="bg-emerald-500 text-white p-3 rounded-xl font-bold text-center shadow-md">📗 KETENTUAN</div>
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Pengertian:</b> Menahan diri</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Syarat Wajib:</b> Islam, Baligh, Berakal, Mampu</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Syarat Sah:</b> Islam, Tamyiz, Suci, Waktu</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Rukun:</b> Niat + Menahan</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Sunnah:</b> Sahur, Kurma, Doa, Sedekah, Tadarus</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-emerald-700">Pembatal:</b> Makan, Muntah, Haid, Murtad</div>
+                </div>
+              </div>
+              
+              <!-- Branch 2: Hikmah -->
+              <div>
+                <div class="flex justify-center mb-2"><div class="w-0.5 h-6 bg-rose-400"></div></div>
+                <div class="bg-rose-500 text-white p-3 rounded-xl font-bold text-center shadow-md">📘 HIKMAH</div>
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Tubuh:</b> Pencernaan istirahat</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Tubuh:</b> Bersihkan badan</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Sosial:</b> Melatih sabar</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Sosial:</b> Peduli sesama</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Sosial:</b> Pengendalian diri</div>
+                  <div class="bg-white p-2 rounded-lg shadow-sm text-xs"><b class="text-rose-700">Sosial:</b> Bersyukur</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Dalil -->
+            <div class="flex justify-center mt-4"><div class="w-0.5 h-6 bg-amber-400"></div></div>
+            <div class="flex justify-center">
+              <div class="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold text-center shadow-md text-sm">📜 Dalil: QS. Al-Baqarah: 183 | Surga: Al-Rayyān</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Glosarium -->
+        <div class="mt-6 bg-white p-4 rounded-xl">
+          <h3 class="font-bold text-emerald-700 mb-2">📚 Glosarium</h3>
+          <div class="grid md:grid-cols-2 gap-2 text-sm">
+            <div><b>Al-imsak:</b> Menahan diri</div>
+            <div><b>Tamyiz:</b> Mampu bedakan baik & buruk</div>
+            <div><b>Baligh:</b> Sudah dewasa (akil baligh)</div>
+            <div><b>Haid:</b> Darah bulanan perempuan</div>
+            <div><b>Nifas:</b> Darah setelah melahirkan</div>
+            <div><b>Tasyriq:</b> 3 hari setelah Idul Adha</div>
+            <div><b>Al-Rayyān:</b> Pintu surga bagi orang puasa</div>
+            <div><b>Tadarus:</b> Membaca Al-Qur'an bergilir</div>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('kuis')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Kuis</button>
+          <button onclick="goTo('refleksi')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Refleksi →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFLEKSI -->
+    <section id="refleksi" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">💭 Refleksi Pembelajaran</h2>
+        <p class="text-gray-600 mb-6">Jawablah dengan jujur untuk mengenal dirimu lebih baik!</p>
+        
+        <div class="space-y-4">
+          <div class="bg-white p-5 rounded-2xl shadow-sm">
+            <label class="font-bold text-emerald-700 block mb-2">🌟 Apa yang paling kamu sukai dari pelajaran hari ini?</label>
+            <textarea class="w-full p-3 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none" rows="2" placeholder="Tulis di sini..."></textarea>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm">
+            <label class="font-bold text-emerald-700 block mb-2">🎯 Manfaat apa yang kamu dapatkan tentang ibadah puasa?</label>
+            <textarea class="w-full p-3 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none" rows="2" placeholder="Tulis di sini..."></textarea>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm">
+            <label class="font-bold text-emerald-700 block mb-2">📅 Apa rencana kamu untuk puasa Ramadan tahun depan?</label>
+            <textarea class="w-full p-3 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none" rows="2" placeholder="Contoh: Aku ingin puasa full 30 hari!"></textarea>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm">
+            <label class="font-bold text-emerald-700 block mb-3">😊 Pilih emoji yang menggambarkan perasaanmu:</label>
+            <div class="flex gap-3 flex-wrap">
+              <button onclick="selectEmoji(this, 'Senang')" class="emoji-btn text-4xl hover:scale-125 transition">😄</button>
+              <button onclick="selectEmoji(this, 'Semangat')" class="emoji-btn text-4xl hover:scale-125 transition">🤩</button>
+              <button onclick="selectEmoji(this, 'Tertantang')" class="emoji-btn text-4xl hover:scale-125 transition">💪</button>
+              <button onclick="selectEmoji(this, 'Biasa')" class="emoji-btn text-4xl hover:scale-125 transition">🙂</button>
+              <button onclick="selectEmoji(this, 'Bingung')" class="emoji-btn text-4xl hover:scale-125 transition">🤔</button>
+              <button onclick="selectEmoji(this, 'Mengantuk')" class="emoji-btn text-4xl hover:scale-125 transition">😴</button>
+            </div>
+            <p id="emojiResult" class="mt-2 text-sm text-gray-600"></p>
+          </div>
+          
+          <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-5 rounded-2xl">
+            <h3 class="font-bold text-purple-700 mb-2">🎯 Janji Ramadan</h3>
+            <p class="text-sm text-gray-700 mb-3">Centang komitmen yang akan kamu lakukan di Ramadan nanti:</p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-emerald-500"/> Berpuasa sebulan penuh</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-emerald-500"/> Hafal niat & doa buka puasa</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-emerald-500"/> Sedekah ta'jil ke teman</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-emerald-500"/> Tadarus Al-Qur'an tiap hari</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-emerald-500"/> Mengendalikan diri dari marah</label>
+            </div>
+            <button onclick="unlockBadge('sabar'); unlockBadge('peduli'); addPoints(30); alert('Alhamdulillah! Janji kamu tercatat. Semoga Allah memudahkan! 🤲')" class="mt-3 btn-primary text-white font-bold px-4 py-2 rounded-xl text-sm">🤲 Saya Berjanji! (+30 poin)</button>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('rangkuman')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Rangkuman</button>
+          <button onclick="goTo('guru')" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">Panduan Guru →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANDUAN GURU -->
+    <section id="guru" class="section hidden">
+      <div class="glass p-8 rounded-3xl shadow-xl">
+        <h2 class="text-3xl font-bold section-title mb-2">👩‍🏫 Panduan Guru</h2>
+        <p class="text-gray-600 mb-6">Panduan lengkap untuk mengintegrasikan media ini dalam pembelajaran.</p>
+        
+        <div class="space-y-4">
+          <details class="bg-white p-4 rounded-xl shadow-sm" open>
+            <summary class="font-bold text-emerald-700 cursor-pointer">📋 Integrasi dalam Modul Ajar (RPP)</summary>
+            <div class="mt-3 text-sm text-gray-700 space-y-2">
+              <p><b>Alokasi:</b> 3 JP x 35 menit = 105 menit</p>
+              <p><b>Langkah:</b></p>
+              <ol class="list-decimal ml-5 space-y-1">
+                <li>Pendahuluan (15 menit): Apersepsi, doa, tanya jawab</li>
+                <li>Kegiatan Inti (75 menit): Eksplorasi materi (20') → Aktivitas interaktif (30') → Kuis HOTS (25')</li>
+                <li>Penutup (15 menit): Rangkuman, refleksi, doa</li>
+              </ol>
+            </div>
+          </details>
+          
+          <details class="bg-white p-4 rounded-xl shadow-sm">
+            <summary class="font-bold text-emerald-700 cursor-pointer">🎯 Pertanyaan Pemantik</summary>
+            <ul class="mt-3 text-sm text-gray-700 space-y-1 list-disc ml-5">
+              <li>Siapa yang tahun lalu puasa full? Ceritakan!</li>
+              <li>Kenapa kita tidak boleh makan saat puasa?</li>
+              <li>Apa bedanya puasa dengan diet?</li>
+              <li>Bagaimana kalau lupa makan saat puasa?</li>
+            </ul>
+          </details>
+          
+          <details class="bg-white p-4 rounded-xl shadow-sm">
+            <summary class="font-bold text-emerald-700 cursor-pointer">🌱 Diferensiasi Pembelajaran</summary>
+            <div class="mt-3 text-sm text-gray-700 space-y-2">
+              <p><b>🌱 Siswa butuh bimbingan:</b> Dampingi saat drag-drop, izinkan lihat rangkuman saat kuis.</p>
+              <p><b>🌿 Siswa reguler:</b> Kerjakan mandiri, target skor minimal 75%.</p>
+              <p><b>🌳 Siswa cepat paham:</b> Tantang dengan soal HOTS, minta presentasi hikmah puasa di depan kelas, buat poster digital.</p>
+            </div>
+          </details>
+          
+          <details class="bg-white p-4 rounded-xl shadow-sm">
+            <summary class="font-bold text-emerald-700 cursor-pointer">📊 Penilaian & Tindak Lanjut</summary>
+            <div class="mt-3 text-sm text-gray-700 space-y-2">
+              <p><b>Kriteria Ketuntasan:</b> Skor ≥75% (6/8 soal benar)</p>
+              <p><b>Remedial:</b> Ulangi materi A & B, bimbingan pribadi, kerjakan kuis versi sederhana.</p>
+              <p><b>Pengayaan:</b> Buat video cerita pengalaman puasa, wawancara orang tua, buat mind map digital.</p>
+              <p><b>Rubrik Uraian:</b></p>
+              <ul class="list-disc ml-5 text-xs">
+                <li>Skor 4: Lengkap, runtut, contoh kontekstual</li>
+                <li>Skor 3: Lengkap tapi kurang contoh</li>
+                <li>Skor 2: Sebagian benar</li>
+                <li>Skor 1: Kurang tepat</li>
+              </ul>
+            </div>
+          </details>
+          
+          <details class="bg-white p-4 rounded-xl shadow-sm">
+            <summary class="font-bold text-emerald-700 cursor-pointer">💻 Tips Teknis</summary>
+            <ul class="mt-3 text-sm text-gray-700 space-y-1 list-disc ml-5">
+              <li>Media berjalan offline di browser (Chrome/Edge/Firefox)</li>
+              <li>Bisa diproyeksikan di LCD untuk kelas besar</li>
+              <li>Siswa bisa akses di HP, tablet, atau komputer</li>
+              <li>Siapkan earphone untuk bagian hafalan</li>
+            </ul>
+          </details>
+          
+          <details class="bg-white p-4 rounded-xl shadow-sm">
+            <summary class="font-bold text-emerald-700 cursor-pointer">🛠️ Tools Rekomendasi (Gratis)</summary>
+            <ul class="mt-3 text-sm text-gray-700 space-y-1 list-disc ml-5">
+              <li><b>Canva for Education:</b> Poster & presentasi</li>
+              <li><b>Wordwall:</b> Game kuis interaktif</li>
+              <li><b>Quizizz/Kahoot:</b> Kuis live competition</li>
+              <li><b>H5P Lumi:</b> Buat media HTML5 offline</li>
+              <li><b>Padlet:</b> Refleksi & kolaborasi siswa</li>
+              <li><b>Scratch:</b> Animasi interaktif</li>
+            </ul>
+          </details>
+          
+          <div class="bg-emerald-100 p-4 rounded-xl border-l-4 border-emerald-500">
+            <b>🌟 Ide Variasi:</b>
+            <ul class="text-sm mt-2 space-y-1 text-gray-700 list-disc ml-5">
+              <li><b>Kontekstual kelas:</b> Tambahkan foto kegiatan puasa di sekolah</li>
+              <li><b>Proyek kolaboratif:</b> Kelompok membuat poster "Ramadan Ceria"</li>
+              <li><b>Asesmen akhir:</b> Presentasi bagan ketentuan puasa + hafalan</li>
+            </ul>
+          </div>
+          
+          <div class="bg-amber-100 p-4 rounded-xl border-l-4 border-amber-500">
+            <b>🚀 Pengembangan Lanjutan:</b>
+            <ul class="text-sm mt-2 space-y-1 text-gray-700 list-disc ml-5">
+              <li>Fitur audio murottal doa niat & buka puasa</li>
+              <li>Video animasi kisah Rasulullah ﷺ</li>
+              <li>Chatbot tutor virtual untuk tanya jawab</li>
+              <li>Integrasi kalender Ramadan interaktif</li>
+              <li>Leaderboard kelas untuk kompetisi sehat</li>
+              <li>Fitur cetak sertifikat otomatis</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+          <button onclick="goTo('refleksi')" class="btn-secondary text-white font-bold px-6 py-2 rounded-xl">← Refleksi</button>
+          <button onclick="showCertificate()" class="btn-primary text-white font-bold px-6 py-2 rounded-xl">🎓 Sertifikat Penutup</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Certificate Modal -->
+<div id="certificateModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4" onclick="if(event.target===this) this.classList.add('hidden')">
+  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl relative pop">
+    <button onclick="document.getElementById('certificateModal').classList.add('hidden')" class="absolute top-4 right-4 text-2xl">×</button>
+    <div class="text-center">
+      <div class="text-6xl mb-2">🎓</div>
+      <h3 class="text-3xl font-bold section-title mb-2">SELAMAT!</h3>
+      <p class="text-gray-600 mb-4">Kamu telah menyelesaikan pembelajaran</p>
+      <div class="bg-gradient-to-br from-emerald-100 to-amber-100 border-4 border-double border-emerald-500 rounded-2xl p-6 my-4">
+        <p class="text-sm">Sertifikat diberikan kepada</p>
+        <h2 class="text-3xl font-bold gradient-text-gold my-2">🌟 ANAK HEBAT 🌟</h2>
+        <p class="font-bold">"Aku Bangga Mampu Berpuasa"</p>
+        <p class="text-sm text-gray-600 mt-2">PAI Kelas 3 SD • Bab IV</p>
+        <div class="mt-3 text-2xl">🏆⭐🌙</div>
+      </div>
+      <p class="text-sm text-gray-600">Semoga ilmu ini bermanfaat dan puasanya diterima Allah Swt. Aamiin 🤲</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed top-24 right-4 z-50 hidden bg-emerald-500 text-white px-6 py-3 rounded-xl shadow-2xl pop font-bold">
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+// ========== STATE ==========
+let totalPoints = 0;
+let visitedSections = new Set(['home']);
+let unlockedBadges = new Set();
+const totalSections = 12;
+let quizData = [];
+let currentQuiz = 0;
+let quizScore = 0;
+
+// ========== NAVIGATION ==========
+function goTo(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+  const target = document.getElementById(id);
+  if (target) {
+    target.classList.remove('hidden');
+    target.classList.add('fade-in');
+  }
+  visitedSections.add(id);
+  updateProgress();
+  
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.target === id);
+  });
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Initialize specific sections
+  if (id === 'kuis') initQuiz();
+  if (id === 'simulasi') initSimulasi();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('hidden');
+  document.getElementById('sidebar').classList.toggle('fixed');
+  document.getElementById('sidebar').classList.toggle('top-[72px]');
+  document.getElementById('sidebar').classList.toggle('left-0');
+  document.getElementById('sidebar').classList.toggle('w-64');
+  document.getElementById('sidebar').classList.toggle('z-40');
+}
+
+function updateProgress() {
+  const progress = Math.round((visitedSections.size / totalSections) * 100);
+  document.getElementById('progressText').textContent = progress + '%';
+  const circumference = 201;
+  const offset = circumference - (progress / 100) * circumference;
+  document.getElementById('progressCircle').style.strokeDashoffset = offset;
+}
+
+// ========== POINTS & BADGES ==========
+function addPoints(n) {
+  totalPoints += n;
+  document.getElementById('totalPoints').textContent = totalPoints;
+  showToast(`+${n} Poin! ⭐`);
+}
+
+function unlockBadge(id) {
+  if (unlockedBadges.has(id)) return;
+  unlockedBadges.add(id);
+  const el = document.querySelector(`[data-badge="${id}"]`);
+  if (el) {
+    el.classList.remove('badge-locked');
+    el.classList.add('pop');
+    showToast(`🏆 Lencana baru diraih!`);
+    createConfetti();
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 2500);
+}
+
+function createConfetti() {
+  const colors = ['#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#8b5cf6'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.5 + 's';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+// ========== TABS ==========
+function showTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  document.getElementById('tab-' + tabId).classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('bg-emerald-500', 'text-white');
+    b.classList.add('bg-white', 'text-gray-700');
+  });
+  const btn = document.querySelector(`[data-tab="${tabId}"]`);
+  btn.classList.remove('bg-white', 'text-gray-700');
+  btn.classList.add('bg-emerald-500', 'text-white');
+}
+
+// ========== FLIP CARDS ==========
+function flipCard(el) {
+  el.classList.toggle('flipped');
+}
+
+// ========== HOTSPOT ==========
+const hotspots = {
+  h1: { title: '💪 Pencernaan Beristirahat', desc: 'Saat puasa, lambung dan usus bisa istirahat. Ini baik untuk kesehatan!' },
+  h2: { title: '🤝 Peduli Sesama', desc: 'Puasa mengajarkan kita merasakan lapar, sehingga lebih peduli pada yang kekurangan.' },
+  h3: { title: '🧘 Melatih Kesabaran', desc: 'Menahan lapar, haus, dan emosi melatih kita jadi anak sabar.' },
+  h4: { title: '😊 Bersyukur', desc: 'Setelah puasa, makanan terasa lebih nikmat. Kita jadi bersyukur!' },
+  h5: { title: '💖 Pengendalian Diri', desc: 'Puasa mengajarkan kita menahan diri dari marah, mencela, dan berbuat buruk.' }
+};
+
+function showHotspot(id) {
+  const h = hotspots[id];
+  document.getElementById('hotspotInfo').innerHTML = `
+    <div class="pop">
+      <div class="font-bold text-emerald-700 text-lg">${h.title}</div>
+      <p class="text-gray-700 mt-1">${h.desc}</p>
+    </div>`;
+  addPoints(2);
+}
+
+function revealAnswer(btn, text) {
+  if (btn.nextElementSibling) btn.nextElementSibling.remove();
+  const div = document.createElement('div');
+  div.className = 'mt-2 p-2 bg-white rounded-lg text-xs text-gray-700 pop';
+  div.innerHTML = '<b>💡 Jawaban:</b> ' + text;
+  btn.parentElement.appendChild(div);
+  addPoints(2);
+}
+
+// ========== SIMULASI WAKTU ==========
+function initSimulasi() {
+  const slider = document.getElementById('timeSlider');
+  slider.oninput = () => {
+    const mins = parseInt(slider.value);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    const timeStr = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    document.getElementById('timeDisplay').textContent = timeStr;
+    
+    let emoji, status, guide;
+    if (mins < 300) { emoji = '🌙'; status = 'Waktu Sahur'; guide = '🍽️ Makan sahur dianjurkan mengakhirkan (mendekati Subuh). Perbanyak doa!'; }
+    else if (mins < 360) { emoji = '🌅'; status = 'Waktu Subuh - Mulai Puasa!'; guide = '🤲 Niat puasa & mulai menahan diri dari makan, minum, dan perbuatan yang membatalkan.'; }
+    else if (mins < 720) { emoji = '☀️'; status = 'Pagi - Perbanyak Ibadah'; guide = '📖 Waktu terbaik untuk tadarus Al-Qur\'an, berzikir, dan berbuat baik.'; }
+    else if (mins < 900) { emoji = '🌞'; status = 'Siang - Tetap Sabar'; guide = '💪 Lapar dan haus adalah ujian. Ingat: pahala sedang mengalir! Tidur siang juga ibadah.'; }
+    else if (mins < 1020) { emoji = '🌤️'; status = 'Sore - Waktu Mustajab'; guide = '🤲 Doa orang berpuasa menjelang berbuka tidak tertolak. Berdoa yang banyak!'; }
+    else { emoji = '🌇'; status = 'Maghrib - Berbuka!'; guide = '🫒 Segerakan berbuka dengan kurma/air putih. Ucapkan doa buka puasa!'; }
+    
+    document.getElementById('timeEmoji').textContent = emoji;
+    document.getElementById('timeStatus').textContent = status;
+    document.getElementById('timeGuide').innerHTML = guide;
+  };
+  slider.oninput();
+}
+
+// ========== ACTIVITIES ==========
+function showActivity(type) {
+  const container = document.getElementById('activityContainer');
+  const activities = {
+    drag: `
+      <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-emerald-700 mb-2">🎯 Drag & Drop: Syarat Wajib vs Syarat Sah</h3>
+        <p class="text-sm text-gray-600 mb-4">Seret kartu ke kategori yang tepat!</p>
+        
+        <div class="flex flex-wrap gap-2 mb-4 p-3 bg-white rounded-xl min-h-[60px]" id="dragSource">
+          <div class="drag-item bg-emerald-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="wajib" data-id="d1">Islam</div>
+          <div class="drag-item bg-amber-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="sah" data-id="d2">Tamyiz</div>
+          <div class="drag-item bg-emerald-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="wajib" data-id="d3">Baligh</div>
+          <div class="drag-item bg-amber-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="sah" data-id="d4">Waktu dibolehkan</div>
+          <div class="drag-item bg-emerald-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="wajib" data-id="d5">Berakal</div>
+          <div class="drag-item bg-emerald-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="wajib" data-id="d6">Mampu</div>
+          <div class="drag-item bg-amber-500 text-white px-3 py-2 rounded-lg text-sm" draggable="true" data-type="sah" data-id="d7">Suci dari haid</div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="drop-zone bg-white border-4 border-dashed border-emerald-300 rounded-xl p-4" data-accept="wajib">
+            <h4 class="font-bold text-emerald-700 mb-2">✅ Syarat Wajib</h4>
+            <div class="flex flex-wrap gap-2 min-h-[80px]"></div>
+          </div>
+          <div class="drop-zone bg-white border-4 border-dashed border-amber-300 rounded-xl p-4" data-accept="sah">
+            <h4 class="font-bold text-amber-700 mb-2">🌟 Syarat Sah</h4>
+            <div class="flex flex-wrap gap-2 min-h-[80px]"></div>
+          </div>
+        </div>
+        
+        <button onclick="checkDragDrop()" class="mt-4 btn-primary text-white font-bold px-6 py-2 rounded-xl">✅ Periksa Jawaban</button>
+        <button onclick="showActivity('drag')" class="mt-4 ml-2 bg-gray-200 font-bold px-6 py-2 rounded-xl">🔄 Ulangi</button>
+        <div id="dragResult" class="mt-3"></div>
+      </div>`,
+      
+    match: `
+      <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-amber-700 mb-2">🔗 Mencocokkan Istilah</h3>
+        <p class="text-sm text-gray-600 mb-4">Klik pasangan yang sesuai!</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-bold text-amber-700 mb-2">Istilah</h4>
+            <div class="space-y-2" id="matchLeft">
+              <button onclick="selectMatch(this, 'L', 1)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">1. Al-imsak</button>
+              <button onclick="selectMatch(this, 'L', 2)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">2. Tamyiz</button>
+              <button onclick="selectMatch(this, 'L', 3)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">3. Tasyriq</button>
+              <button onclick="selectMatch(this, 'L', 4)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">4. Al-Rayyān</button>
+              <button onclick="selectMatch(this, 'L', 5)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">5. Tadarus</button>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-bold text-amber-700 mb-2">Arti</h4>
+            <div class="space-y-2" id="matchRight">
+              <button onclick="selectMatch(this, 'R', 3)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">A. 3 hari setelah Idul Adha</button>
+              <button onclick="selectMatch(this, 'R', 1)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">B. Menahan diri</button>
+              <button onclick="selectMatch(this, 'R', 5)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">C. Membaca Al-Qur'an bergilir</button>
+              <button onclick="selectMatch(this, 'R', 4)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">D. Pintu surga orang puasa</button>
+              <button onclick="selectMatch(this, 'R', 2)" class="match-btn w-full bg-white p-3 rounded-xl text-left border-2 border-transparent card-hover">E. Bisa bedakan baik-buruk</button>
+            </div>
+          </div>
+        </div>
+        <div id="matchResult" class="mt-4"></div>
+      </div>`,
+      
+    urut: `
+      <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-purple-700 mb-2">📋 Susun Urutan Kegiatan Puasa</h3>
+        <p class="text-sm text-gray-600 mb-4">Klik kartu untuk menyusun dari pagi ke malam!</p>
+        <div class="flex flex-wrap gap-2 mb-4 p-3 bg-white rounded-xl" id="urutSource">
+          <button onclick="urutClick(this, 5)" class="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm" data-order="5">🌇 Berbuka puasa</button>
+          <button onclick="urutClick(this, 2)" class="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm" data-order="2">🌙 Makan sahur</button>
+          <button onclick="urutClick(this, 4)" class="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm" data-order="4">🤲 Berdoa menjelang maghrib</button>
+          <button onclick="urutClick(this, 1)" class="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm" data-order="1">🤲 Niat puasa</button>
+          <button onclick="urutClick(this, 3)" class="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm" data-order="3">📖 Tadarus di siang hari</button>
+        </div>
+        <div class="bg-white p-4 rounded-xl min-h-[80px]">
+          <div class="text-sm text-gray-500 mb-2">Urutan kamu:</div>
+          <div id="urutTarget" class="flex flex-wrap gap-2"></div>
+        </div>
+        <button onclick="checkUrut()" class="mt-4 btn-primary text-white font-bold px-6 py-2 rounded-xl">✅ Periksa</button>
+        <button onclick="showActivity('urut')" class="mt-4 ml-2 bg-gray-200 font-bold px-6 py-2 rounded-xl">🔄 Ulangi</button>
+        <div id="urutResult" class="mt-3"></div>
+      </div>`,
+      
+    benar: `
+      <div class="bg-gradient-to-br from-rose-50 to-red-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-rose-700 mb-2">✅ Benar atau Salah?</h3>
+        <div class="space-y-3" id="benarContainer"></div>
+        <div id="benarResult" class="mt-4"></div>
+      </div>`,
+      
+    skenario: `
+      <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-blue-700 mb-2">🎭 Skenario Kontekstual</h3>
+        <div class="space-y-4">
+          <div class="bg-white p-4 rounded-xl">
+            <div class="font-bold text-blue-700 mb-2">Kasus 1: Ahmad Lupa</div>
+            <p class="text-sm mb-3">Ahmad sedang berpuasa. Saat bermain, ia tidak sengaja minum air karena lupa. Apa yang harus dilakukan Ahmad?</p>
+            <div class="space-y-2">
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">A. Puasanya batal, harus ganti</button>
+              <button onclick="skenarioAns(this, true)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">B. Puasanya TIDAK batal, lanjutkan puasa</button>
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">C. Ahmad harus bayar fidyah</button>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-xl">
+            <div class="font-bold text-blue-700 mb-2">Kasus 2: Siti Sakit</div>
+            <p class="text-sm mb-3">Siti sakit demam tinggi di bulan Ramadan. Ibunya menyarankannya tidak puasa. Apa yang benar?</p>
+            <div class="space-y-2">
+              <button onclick="skenarioAns(this, true)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">A. Siti boleh tidak puasa & menggantinya di hari lain</button>
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">B. Siti harus tetap puasa meskipun sakit</button>
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">C. Siti tidak perlu mengganti puasa</button>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-xl">
+            <div class="font-bold text-blue-700 mb-2">Kasus 3: Budi di Hari Raya</div>
+            <p class="text-sm mb-3">Budi ingin berpuasa di hari Idul Fitri karena ingin dapat pahala lebih. Bolehkah?</p>
+            <div class="space-y-2">
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">A. Boleh, karena niatnya baik</button>
+              <button onclick="skenarioAns(this, true)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">B. TIDAK BOLEH, hari Idul Fitri haram berpuasa</button>
+              <button onclick="skenarioAns(this, false)" class="w-full text-left bg-gray-50 hover:bg-gray-100 p-2 rounded-lg text-sm">C. Boleh jika hanya setengah hari</button>
+            </div>
+          </div>
+        </div>
+      </div>`,
+      
+    bagan: `
+      <div class="bg-gradient-to-br from-indigo-50 to-violet-50 p-6 rounded-2xl slide-in">
+        <h3 class="text-2xl font-bold text-indigo-700 mb-2">🗂️ Lengkapi Bagan Ketentuan Puasa</h3>
+        <p class="text-sm text-gray-600 mb-4">Klik kotak kosong lalu pilih jawaban yang tepat!</p>
+        <div class="bg-white p-6 rounded-2xl">
+          <div class="text-center mb-4">
+            <div class="inline-block bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-full font-bold">🌙 PUASA RAMADAN</div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 mt-4">
+            <div class="bg-emerald-100 p-3 rounded-xl">
+              <div class="font-bold text-emerald-700 text-sm">Syarat Wajib</div>
+              <button onclick="baganFill(this, 'islam-baligh-akal-mampu')" class="w-full mt-2 bg-white border-2 border-dashed border-emerald-400 p-2 rounded-lg text-sm text-left">❓ Klik untuk isi...</button>
+            </div>
+            <div class="bg-amber-100 p-3 rounded-xl">
+              <div class="font-bold text-amber-700 text-sm">Rukun Puasa</div>
+              <button onclick="baganFill(this, 'niat-menahan')" class="w-full mt-2 bg-white border-2 border-dashed border-amber-400 p-2 rounded-lg text-sm text-left">❓ Klik untuk isi...</button>
+            </div>
+            <div class="bg-rose-100 p-3 rounded-xl">
+              <div class="font-bold text-rose-700 text-sm">Hal yang Membatalkan</div>
+              <button onclick="baganFill(this, 'makan-muntah-haid-murtad')" class="w-full mt-2 bg-white border-2 border-dashed border-rose-400 p-2 rounded-lg text-sm text-left">❓ Klik untuk isi...</button>
+            </div>
+            <div class="bg-purple-100 p-3 rounded-xl">
+              <div class="font-bold text-purple-700 text-sm">Sunnah Puasa</div>
+              <button onclick="baganFill(this, 'sahur-kurma-doa-sedekah')" class="w-full mt-2 bg-white border-2 border-dashed border-purple-400 p-2 rounded-lg text-sm text-left">❓ Klik untuk isi...</button>
+            </div>
+          </div>
+          <div id="baganResult" class="mt-4"></div>
+        </div>
+      </div>`
+  };
+  container.innerHTML = activities[type];
+  
+  if (type === 'drag') initDragDrop();
+  if (type === 'benar') initBenarSalah();
+}
+
+// ===== DRAG & DROP =====
+function initDragDrop() {
+  const items = document.querySelectorAll('.drag-item');
+  const zones = document.querySelectorAll('.drop-zone');
+  let draggedEl = null;
+  
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      draggedEl = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    
+    // Touch support
+    item.addEventListener('click', () => {
+      if (window.selectedDrag === item) {
+        window.selectedDrag = null;
+        item.style.outline = '';
+      } else {
+        if (window.selectedDrag) window.selectedDrag.style.outline = '';
+        window.selectedDrag = item;
+        item.style.outline = '3px solid #10b981';
+      }
+    });
+  });
+  
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (draggedEl) zone.querySelector('div').appendChild(draggedEl);
+    });
+    
+    // Touch support
+    zone.addEventListener('click', () => {
+      if (window.selectedDrag) {
+        zone.querySelector('div').appendChild(window.selectedDrag);
+        window.selectedDrag.style.outline = '';
+        window.selectedDrag = null;
+      }
+    });
+  });
+  
+  // Also source zone accepts back
+  const src = document.getElementById('dragSource');
+  src.addEventListener('click', () => {
+    if (window.selectedDrag) {
+      src.appendChild(window.selectedDrag);
+      window.selectedDrag.style.outline = '';
+      window.selectedDrag = null;
+    }
+  });
+}
+
+function checkDragDrop() {
+  const zones = document.querySelectorAll('.drop-zone');
+  let correct = 0, total = 0;
+  zones.forEach(z => {
+    const accept = z.dataset.accept;
+    const items = z.querySelectorAll('.drag-item');
+    items.forEach(item => {
+      total++;
+      if (item.dataset.type === accept) {
+        item.style.background = '#10b981';
+        correct++;
+      } else {
+        item.style.background = '#ef4444';
+      }
+    });
+  });
+  const srcItems = document.querySelectorAll('#dragSource .drag-item');
+  const result = document.getElementById('dragResult');
+  if (total === 0) {
+    result.innerHTML = '<div class="bg-amber-100 p-3 rounded-xl text-amber-800">⚠️ Seret semua kartu ke kotak dulu ya!</div>';
+    return;
+  }
+  if (correct === 7) {
+    result.innerHTML = '<div class="bg-emerald-100 p-3 rounded-xl text-emerald-800">🎉 SEMPURNA! Semua benar! +50 poin</div>';
+    addPoints(50);
+    unlockBadge('puasa');
+    createConfetti();
+  } else {
+    result.innerHTML = `<div class="bg-amber-100 p-3 rounded-xl text-amber-800">Benar: ${correct}/7. Hijau = benar, merah = salah. Coba lagi ya!</div>`;
+    addPoints(correct * 5);
+  }
+}
+
+// ===== MATCH =====
+let matchState = { left: null, right: null, correct: 0 };
+function selectMatch(el, side, num) {
+  if (el.classList.contains('matched')) return;
+  if (side === 'L') {
+    document.querySelectorAll('#matchLeft .match-btn').forEach(b => b.classList.remove('border-amber-500'));
+    el.classList.add('border-amber-500');
+    matchState.left = { el, num };
+  } else {
+    document.querySelectorAll('#matchRight .match-btn').forEach(b => b.classList.remove('border-amber-500'));
+    el.classList.add('border-amber-500');
+    matchState.right = { el, num };
+  }
+  if (matchState.left && matchState.right) {
+    if (matchState.left.num === matchState.right.num) {
+      matchState.left.el.classList.add('matched', 'bg-emerald-100', 'border-emerald-500');
+      matchState.right.el.classList.add('matched', 'bg-emerald-100', 'border-emerald-500');
+      matchState.left.el.classList.remove('border-amber-500');
+      matchState.right.el.classList.remove('border-amber-500');
+      matchState.correct++;
+      addPoints(10);
+      if (matchState.correct === 5) {
+        document.getElementById('matchResult').innerHTML = '<div class="bg-emerald-100 p-3 rounded-xl text-emerald-800">🎉 HEBAT! Semua benar! +30 bonus</div>';
+        addPoints(30);
+        createConfetti();
+      }
+    } else {
+      matchState.left.el.classList.add('bg-rose-100');
+      matchState.right.el.classList.add('bg-rose-100');
+      setTimeout(() => {
+        matchState.left.el.classList.remove('bg-rose-100', 'border-amber-500');
+        matchState.right.el.classList.remove('bg-rose-100', 'border-amber-500');
+      }, 600);
+    }
+    matchState.left = null;
+    matchState.right = null;
+  }
+}
+
+// ===== URUT =====
+let urutSelected = [];
+function urutClick(el, order) {
+  el.disabled = true;
+  el.style.opacity = 0.3;
+  urutSelected.push({ el, order });
+  const target = document.getElementById('urutTarget');
+  const clone = el.cloneNode(true);
+  clone.style.opacity = 1;
+  clone.disabled = true;
+  clone.classList.add('pop');
+  target.appendChild(clone);
+}
+
+function checkUrut() {
+  const correct = urutSelected.every((item, i) => item.order === i + 1);
+  const res = document.getElementById('urutResult');
+  if (urutSelected.length < 5) {
+    res.innerHTML = '<div class="bg-amber-100 p-3 rounded-xl">⚠️ Susun semua kartu dulu!</div>';
+    return;
+  }
+  if (correct) {
+    res.innerHTML = '<div class="bg-emerald-100 p-3 rounded-xl text-emerald-800">🎉 SEMPURNA! Urutan benar! +40 poin</div>';
+    addPoints(40);
+    createConfetti();
+  } else {
+    res.innerHTML = '<div class="bg-rose-100 p-3 rounded-xl text-rose-800">❌ Urutan salah. Jawaban benar: 1. Niat → 2. Sahur → 3. Tadarus → 4. Berdoa → 5. Berbuka</div>';
+    addPoints(10);
+  }
+}
+
+// ===== BENAR SALAH =====
+function initBenarSalah() {
+  const statements = [
+    { text: 'Puasa Ramadan hukumnya sunnah.', answer: false, fb: 'Puasa Ramadan hukumnya WAJIB bagi yang memenuhi syarat.' },
+    { text: 'Niat puasa dilakukan pada malam hari sebelum fajar.', answer: true, fb: 'Benar! Niat puasa Ramadan wajib dilakukan malam hari sebelum fajar.' },
+    { text: 'Makan karena lupa membatalkan puasa.', answer: false, fb: 'TIDAK batal. Rasulullah bersabda: jika lupa, lanjutkan puasa.' },
+    { text: 'Berbuka dengan kurma termasuk sunnah puasa.', answer: true, fb: 'Benar! Rasulullah ﷺ berbuka dengan kurma.' },
+    { text: 'Anak kecil yang belum baligh wajib puasa.', answer: false, fb: 'Tidak wajib, tapi DIANJURKAN latihan puasa.' }
+  ];
+  const container = document.getElementById('benarContainer');
+  statements.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'bg-white p-4 rounded-xl';
+    div.innerHTML = `
+      <p class="mb-3">${i+1}. ${s.text}</p>
+      <div class="flex gap-2">
+        <button onclick="benarAns(this, true, ${s.answer}, '${s.fb.replace(/'/g,"\\'")}')" class="flex-1 bg-emerald-500 text-white py-2 rounded-lg font-bold hover:bg-emerald-600">✅ BENAR</button>
+        <button onclick="benarAns(this, false, ${s.answer}, '${s.fb.replace(/'/g,"\\'")}')" class="flex-1 bg-rose-500 text-white py-2 rounded-lg font-bold hover:bg-rose-600">❌ SALAH</button>
+      </div>
+      <div class="feedback mt-2 hidden"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function benarAns(btn, choice, correct, fb) {
+  const parent = btn.parentElement.parentElement;
+  const buttons = parent.querySelectorAll('button');
+  buttons.forEach(b => b.disabled = true);
+  const feedback = parent.querySelector('.feedback');
+  feedback.classList.remove('hidden');
+  if (choice === correct) {
+    btn.classList.add('bg-emerald-700');
+    feedback.innerHTML = `<div class="bg-emerald-50 p-2 rounded text-sm text-emerald-800">✅ Benar! ${fb}</div>`;
+    addPoints(10);
+  } else {
+    btn.classList.add('bg-rose-700');
+    feedback.innerHTML = `<div class="bg-rose-50 p-2 rounded text-sm text-rose-800">❌ Kurang tepat. ${fb}</div>`;
+  }
+}
+
+// ===== SKENARIO =====
+function skenarioAns(btn, correct) {
+  const parent = btn.parentElement;
+  const all = parent.querySelectorAll('button');
+  all.forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+  btn.classList.remove('opacity-50');
+  if (correct) {
+    btn.classList.add('bg-emerald-500', 'text-white');
+    addPoints(15);
+    showToast('✅ Benar! +15 poin');
+  } else {
+    btn.classList.add('bg-rose-500', 'text-white');
+    all.forEach(b => { if (!b.disabled || b.dataset.correct === 'true') {} });
+    showToast('❌ Coba pahami lagi materinya');
+  }
+}
+
+// ===== BAGAN =====
+function baganFill(btn, correctKey) {
+  const options = {
+    'islam-baligh-akal-mampu': ['Islam, Baligh, Berakal, Mampu', 'Islam, Tamyiz, Suci, Waktu'],
+    'niat-menahan': ['Niat + Menahan diri', 'Sahur + Berbuka'],
+    'makan-muntah-haid-murtad': ['Makan, Muntah sengaja, Haid, Murtad', 'Sahur, Berbuka, Tadarus'],
+    'sahur-kurma-doa-sedekah': ['Sahur, Berbuka kurma, Doa, Sedekah', 'Makan, Minum, Tidur, Main']
+  };
+  const opts = options[correctKey];
+  const choice = prompt(`Pilih jawaban yang benar:\n1. ${opts[0]}\n2. ${opts[1]}\n\nKetik 1 atau 2:`);
+  if (choice === '1') {
+    btn.innerHTML = `✅ ${opts[0]}`;
+    btn.classList.remove('border-dashed');
+    btn.classList.add('bg-emerald-100', 'border-emerald-400');
+    btn.disabled = true;
+    addPoints(10);
+    showToast('✅ Benar!');
+  } else if (choice === '2') {
+    btn.innerHTML = `❌ ${opts[1]}`;
+    btn.classList.add('bg-rose-100');
+    btn.disabled = false;
+    showToast('❌ Coba lagi!');
+  }
+}
+
+// ========== QUIZ & HOTS ==========
+function initQuiz() {
+  if (quizData.length > 0) return;
+  quizData = [
+    { q: 'Puasa menurut bahasa berarti...', opts: ['Menjatuhkan diri', 'Membela diri', 'Menahan diri', 'Melawan diri'], a: 2, fb: 'Puasa (al-shaum/al-imsak) berarti menahan diri.', lvl: 'C1' },
+    { q: 'Perintah puasa Ramadan terdapat pada...', opts: ['QS. Al-Baqarah 182', 'QS. Al-Baqarah 183', 'QS. Al-Baqarah 184', 'QS. Al-Baqarah 185'], a: 1, fb: 'QS. Al-Baqarah ayat 183.', lvl: 'C1' },
+    { q: 'Yang BUKAN pembatal puasa adalah...', opts: ['Makan sengaja', 'Murtad', 'Bersin', 'Muntah sengaja'], a: 2, fb: 'Bersin tidak membatalkan puasa.', lvl: 'C2' },
+    { q: 'Nama pintu surga bagi orang yang berpuasa adalah...', opts: ['Al-Rayyān', 'Al-Rida', 'Al-Taubah', 'Al-Firdaus'], a: 0, fb: 'Al-Rayyān khusus untuk orang yang berpuasa.', lvl: 'C1' },
+    { q: 'Amin suka memberi makanan pada fakir miskin setiap saat, tidak hanya Ramadan. Perilaku Amin termasuk...', opts: ['Sikap jujur', 'Sikap peduli', 'Sikap hemat', 'Sikap berani'], a: 1, fb: 'Peduli pada sesama dengan berbagi rezeki.', lvl: 'C3' },
+    // HOTS
+    { q: '[HOTS - C4 Analisis] Rina (9 tahun, belum baligh) ingin puasa full 30 hari, tetapi ibunya melarang karena khawatir kesehatannya. Menurutmu, sikap yang PALING tepat adalah...', opts: [
+      'Rina harus memaksa puasa agar dapat pahala',
+      'Rina latihan puasa setengah hari, lalu berbuka, agar tetap dapat pahala latihan tanpa membahayakan kesehatan',
+      'Rina tidak puasa sama sekali sampai baligh',
+      'Rina puasa tapi boleh makan sembunyi-sembunyi'
+    ], a: 1, fb: 'Anak kecil dianjurkan latihan puasa sesuai kemampuan. Tidak wajib tapi baik dibiasakan. Kesehatan tetap dijaga.', lvl: 'C4' },
+    { q: '[HOTS - C5 Evaluasi] Budi berkata: "Puasa itu cuma bikin lapar, tidak ada gunanya." Evaluasi pernyataan Budi berdasarkan hikmah puasa!', opts: [
+      'Pernyataan Budi benar karena puasa memang menahan lapar saja',
+      'Pernyataan Budi SALAH karena puasa memiliki banyak hikmah: kesehatan, kesabaran, kepedulian, dan pahala',
+      'Pernyataan Budi setengah benar',
+      'Tidak bisa dievaluasi'
+    ], a: 1, fb: 'Puasa memiliki banyak hikmah: fisik (kesehatan), mental (sabar), sosial (peduli), spiritual (pahala). Budi belum memahami makna puasa.', lvl: 'C5' },
+    { q: '[HOTS - C6 Mencipta] Kamu ingin mengajak teman-teman di sekolah untuk semangat berpuasa Ramadan. Kegiatan PALING KREATIF yang bisa kamu rancang adalah...', opts: [
+      'Menyuruh semua teman puasa',
+      'Membuat "Ramadan Challenge" dengan kartu stiker harian, berbagi ta\'jil gratis, dan lomba menghias masjid sekolah',
+      'Memaksa teman yang tidak puasa untuk puasa',
+      'Tidak usah mengajak, ibadah urusan masing-masing'
+    ], a: 1, fb: 'Kreativitas + kolaborasi + kepedulian = Ramadan Challenge! Mengajak dengan cara positif dan menyenangkan.', lvl: 'C6' }
+  ];
+  currentQuiz = 0;
+  quizScore = 0;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if (currentQuiz >= quizData.length) { showQuizResult(); return; }
+  const q = quizData[currentQuiz];
+  const container = document.getElementById('quizContainer');
+  const progress = (currentQuiz / quizData.length) * 100;
+  document.getElementById('quizProgress').style.width = progress + '%';
+  document.getElementById('quizCounter').textContent = `${currentQuiz + 1}/${quizData.length}`;
+  document.getElementById('quizScore').textContent = quizScore;
+  
+  container.innerHTML = `
+    <div class="bg-white p-6 rounded-2xl shadow-md slide-in">
+      <div class="flex items-start gap-3 mb-4">
+        <div class="bg-emerald-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0">${currentQuiz + 1}</div>
+        <div class="flex-1">
+          <span class="inline-block bg-${q.lvl.startsWith('C') && parseInt(q.lvl[1]) >= 4 ? 'rose' : 'emerald'}-100 text-${q.lvl.startsWith('C') && parseInt(q.lvl[1]) >= 4 ? 'rose' : 'emerald'}-700 px-2 py-1 rounded text-xs font-bold mb-2">Level ${q.lvl}</span>
+          <p class="font-semibold">${q.q}</p>
+        </div>
+      </div>
+      <div class="space-y-2">
+        ${q.opts.map((opt, i) => `
+          <button onclick="answerQuiz(${i})" class="quiz-option w-full text-left p-3 rounded-xl bg-gray-50">${String.fromCharCode(65+i)}. ${opt}</button>
+        `).join('')}
+      </div>
+      <div id="quizFeedback" class="mt-4 hidden"></div>
+    </div>`;
+}
+
+function answerQuiz(idx) {
+  const q = quizData[currentQuiz];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    o.disabled = true;
+    if (i === q.a) o.classList.add('correct');
+    if (i === idx && i !== q.a) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFeedback');
+  fb.classList.remove('hidden');
+  if (idx === q.a) {
+    quizScore++;
+    fb.innerHTML = `<div class="bg-emerald-100 p-3 rounded-xl text-emerald-800">✅ <b>Benar!</b> ${q.fb}</div>`;
+    addPoints(15);
+  } else {
+    fb.innerHTML = `<div class="bg-rose-100 p-3 rounded-xl text-rose-800">❌ <b>Kurang tepat.</b> ${q.fb}</div>`;
+    addPoints(3);
+  }
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'mt-3 btn-primary text-white font-bold px-6 py-2 rounded-xl';
+  nextBtn.textContent = currentQuiz === quizData.length - 1 ? 'Lihat Hasil →' : 'Lanjut →';
+  nextBtn.onclick = () => { currentQuiz++; renderQuiz(); };
+  fb.appendChild(nextBtn);
+}
+
+function showQuizResult() {
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  const lulus = pct >= 75;
+  document.getElementById('quizContainer').innerHTML = '';
+  document.getElementById('quizProgress').style.width = '100%';
+  document.getElementById('quizCounter').textContent = `${quizData.length}/${quizData.length}`;
+  
+  const res = document.getElementById('quizResult');
+  res.classList.remove('hidden');
+  res.innerHTML = `
+    <div class="pop bg-gradient-to-br ${lulus ? 'from-emerald-100 to-teal-100' : 'from-amber-100 to-orange-100'} p-8 rounded-3xl text-center">
+      <div class="text-7xl mb-3">${lulus ? '🏆' : '💪'}</div>
+      <h3 class="text-3xl font-bold ${lulus ? 'text-emerald-700' : 'text-amber-700'} mb-2">${lulus ? 'SELAMAT! Kamu TUNTAS!' : 'Ayo Semangat!'}</h3>
+      <p class="text-gray-700 mb-4">Skor kamu: <b class="text-2xl">${quizScore}/${quizData.length}</b> (${pct}%)</p>
+      <div class="bg-white p-4 rounded-xl mb-4">
+        <div class="text-sm text-gray-600 mb-1">Target ketuntasan: 75%</div>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+          <div class="bg-gradient-to-r ${lulus ? 'from-emerald-500 to-teal-500' : 'from-amber-500 to-orange-500'} h-full rounded-full transition-all" style="width:${pct}%"></div>
+        </div>
+      </div>
+      ${lulus ? `
+        <p class="text-sm text-gray-700 mb-4">🌟 Hebat! Kamu sudah menguasai materi dengan baik!</p>
+        <button onclick="unlockBadge('juara'); addPoints(50); createConfetti()" class="btn-primary text-white font-bold px-6 py-3 rounded-xl">🏆 Ambil Lencana Juara! (+50 poin)</button>
+      ` : `
+        <p class="text-sm text-gray-700 mb-4">💡 Jangan menyerah! Baca lagi materinya dan coba lagi.</p>
+        <div class="flex gap-2 justify-center flex-wrap">
+          <button onclick="goTo('materiA')" class="btn-secondary text-white font-bold px-4 py-2 rounded-xl">📗 Baca Materi</button>
+          <button onclick="resetQuiz()" class="btn-primary text-white font-bold px-4 py-2 rounded-xl">🔄 Coba Lagi</button>
+        </div>
+      `}
+    </div>`;
+}
+
+function resetQuiz() {
+  quizData = [];
+  initQuiz();
+  document.getElementById('quizResult').classList.add('hidden');
+}
+
+// ========== EMOJI ==========
+function selectEmoji(btn, name) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.style.transform = '');
+  btn.style.transform = 'scale(1.5)';
+  document.getElementById('emojiResult').textContent = `Kamu merasa: ${name}. Terima kasih sudah berbagi! 💚`;
+  addPoints(5);
+}
+
+// ========== CERTIFICATE ==========
+function showCertificate() {
+  document.getElementById('certificateModal').classList.remove('hidden');
+  document.getElementById('certificateModal').classList.add('flex');
+  createConfetti();
+}
+
+// ========== STARS BACKGROUND ==========
+function createStars() {
+  const container = document.getElementById('stars-container');
+  for (let i = 0; i < 30; i++) {
+    const star = document.createElement('div');
+    star.className = 'star twinkle';
+    const size = 6 + Math.random() * 14;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    container.appendChild(star);
+  }
+}
+
+// Init
+createStars();
+updateProgress();
+document.querySelector('[data-target="home"]').classList.add('active');
+</script>
+</body>
+</html>
